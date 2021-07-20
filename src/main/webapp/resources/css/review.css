@@ -1,0 +1,367 @@
+@charset "UTF-8";
+
+@import
+	url('https://fonts.googleapis.com/css2?family=Manrope:wght@200&display=swap')
+	;
+
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,300");
+
+body {
+	color: #2c3e50;
+	font-family: 'Roboto', sans-serif;
+	font-weight: 400;
+}
+
+.pagination-container {
+	display: inline-block;
+	margin: 80px auto;
+	text-align: center;
+/* 	padding-left: 15%; */
+}
+
+.pagination {
+	position: relative;
+	width: 100%;
+	margin-top: 3%;
+}
+
+.pagination a {
+	position: relative;
+	display: inline-block;
+	color: #2c3e50;
+	text-decoration: none;
+	font-size: 1.2rem;
+	padding: 8px 16px 10px;
+}
+
+.pagination a:before {
+	z-index: -1;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	content: "";
+	top: 0;
+	left: 0;
+	background-color: #2c3e50;
+	border-radius: 24px;
+	transform: scale(0);
+	transition: all 0.2s;
+}
+
+.pagination a:hover, .pagination a .pagination-active {
+	color: #fff;
+}
+
+.pagination a:hover:before, .pagination a .pagination-active:before {
+	transform: scale(1);
+}
+
+.pagination .pagination-active {
+	color: #fff;
+}
+
+.pagination .pagination-active:before {
+	transform: scale(1);
+}
+
+.pagination-newer 
+.pagination-older
+{
+	font-weight: 600;
+}
+
+
+.cross {
+	padding: 10px;
+	color: #1abc9c;;
+	cursor: pointer;
+	font-size: 23px
+}
+
+.cross i {
+	margin-top: -5px;
+	cursor: pointer
+}
+
+.comment-box {
+	padding: 5px
+}
+
+.comment-area textarea {
+	resize: none;
+	border: 1px solid #1abc9c;
+}
+
+.form-control:focus {
+	color: #495057;
+	background-color: #fff;
+	border-color: #ffffff;
+	outline: 0;
+	box-shadow: 0 0 0 1px #1abc9c !important
+}
+
+.send {
+	color: #fff;
+	background-color: #1abc9c;
+	border-color: #1abc9c;
+}
+
+.send:hover {
+	color: #fff;
+	background-color: #1abc9c;
+	border-color: #1abc9c;
+}
+
+.rating {
+	display: inline-flex;
+	margin-top: -10px;
+	flex-direction: row-reverse
+}
+
+.rating>input {
+	display: none
+}
+
+.rating>label {
+	position: relative;
+	width: 28px;
+	font-size: 35px;
+	color: #1abc9c;
+	cursor: pointer
+}
+
+.rating>label::before {
+	content: "\2605";
+	position: absolute;
+	opacity: 0
+}
+
+.rating>label:hover:before, .rating>label:hover ~label:before {
+	opacity: 1 !important
+}
+
+.rating>input:checked ~label:before {
+	opacity: 1
+}
+
+.rating:hover>input:checked ~label:before {
+	opacity: 0.4
+}
+
+.starR1 {
+	background:
+		url('http://miuu227.godohosting.com/images/icon/ico_review.png')
+		no-repeat -52px 0;
+	background-size: auto 100%;
+	width: 15px;
+	height: 30px;
+	float: left;
+	text-indent: -9999px;
+	cursor: pointer;
+}
+
+.starR2 {
+	background:
+		url('http://miuu227.godohosting.com/images/icon/ico_review.png')
+		no-repeat right 0;
+	background-size: auto 100%;
+	width: 15px;
+	height: 30px;
+	float: left;
+	text-indent: -9999px;
+	cursor: pointer;
+}
+
+.starR1.on {
+	background-position: 0 0;
+}
+
+.starR2.on {
+	background-position: -15px 0;
+}
+
+.table.review {
+	line-height: 40px;
+}
+
+.col-md-6.nameItem {
+	color: #838383;
+}
+
+#reviewContent {
+	font-size: 18px;
+	font-weight: 350;
+}
+
+.stars-outer {
+	position: relative;
+	display: inline-block;
+}
+
+.stars-inner {
+	position: absolute;
+	top: 0;
+	left: 0;
+	white-space: nowrap;
+	overflow: hidden;
+	width: 0;
+}
+
+.stars-outer::before {
+	/* 별 모양 */
+	content: "\f005";
+	font-family: 'Font Awesome 5 Free';
+	/* 별 빈 정도 (두께) */
+	font-weight: 900;
+	color: #ccc;
+}
+
+.stars-outer1::before {
+	/* 별 모양 */
+	content: "\f005";
+	font-family: 'Font Awesome 5 Free';
+	/* 별 빈 정도 (두께) */
+	font-weight: 900;
+	color: #f8ce0b;
+}
+
+.stars-outer.rate::before {
+	font-size: 35px;
+	/* 별 모양 */
+	content: "\f005\f005\f005\f005\f005";
+	font-family: 'Font Awesome 5 Free';
+	/* 별 빈 정도 (두께) */
+	font-weight: 900;
+	color: #ccc;
+}
+
+.stars-inner.rate::before {
+	font-size: 35px;
+	/* 별 모양 */
+	content: "\f005\f005\f005\f005\f005";
+	font-family: 'Font Awesome 5 Free';
+	/* 별 빈 정도 (두께) */
+	font-weight: 900;
+	color: #f8ce0b;
+}
+
+.star-area {
+	text-align: center;
+}
+
+.star-area .total {
+	font-size: 20px;
+}
+
+.star-area .sum {
+	font-size: 30px;
+	font-weight: 600;
+}
+
+.buttonArea {
+	text-align: end;
+}
+
+button {
+	/* width: 90px; */
+	border: none;
+	border-radius: 50px;
+	margin-top: 5px;
+	cursor: pointer;
+}
+
+.btn-update {
+	color: white;
+	background-color: #0a8a8a;
+}
+
+.btn-delete {
+	color: #0a8a8a;
+}
+
+.creDate {
+	position: absoulte;
+	text-align: end;
+}
+
+.writeLink {
+	text-align: end;
+	padding-right: 20px;
+	font-size: 18px;
+}
+
+.writeR {
+	color: #0a8a8a;
+}
+
+.rateTitle {
+	font-size: 22px;
+	font-weight: 600;
+	text-align: center;
+}
+
+.sum {
+	margin-left: 10px;
+	font-weight: 800;
+	font-size: 23px;
+	color: #0a8a8a;
+}
+
+td {
+	border-top: none !important;
+}
+
+.reviewList {
+	border-bottom: 1px solid #dee2e6;
+}
+
+/* 요한님 파트 css */
+.fa-star, .fa-star-o {
+	color: orange;
+}
+
+.rating-process {
+	width: 100%;
+	text-align: left;
+	/* float: right; */
+}
+
+.rating-right-part {
+	margin-bottom: 3px;
+	width: 100%;
+}
+
+.rating-right-part p {
+	margin: 0px;
+}
+
+.progress1, .progress2, .progress3, .progress4, .progress5 {
+	background: #c2c2c2;
+	border-radius: 13px;
+	height: 18px;
+	width: 70%;
+	padding: 3px;
+	margin: -20px 0px 0px 50px;
+}
+
+.progress1After, .progress2After, .progress3After, .progress4After,
+	.progress5After {
+	background: #0a8a8a;
+	border-radius: 13px;
+	height: 12px;
+	width: 0;
+	max-width: 100%;
+}
+
+.percentage {
+	text-align: end;
+}
+
+@media ( min-width :320px) and (max-width:640px) {
+	.rating {
+		width: 100%;
+	}
+	.rating-process {
+		width: 100%;
+	}
+}

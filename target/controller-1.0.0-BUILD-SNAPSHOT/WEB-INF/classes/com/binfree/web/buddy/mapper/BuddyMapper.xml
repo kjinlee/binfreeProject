@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.binfree.web.buddy.mapper.BuddyMapper">
+
+<select id="getTotalCount" resultType="int">
+	SELECT COUNT(*) FROM BUDDY WHERE ID > 0
+</select>
+
+<select id="getBuddyListWithPaging" resultType="com.binfree.web.buddy.domain.BuddyVO">
+	<![CDATA[
+		SELECT * FROM(
+  		SELECT @rownum:=@rownum+1  rnum, A.* 
+  		FROM buddy A, (SELECT @ROWNUM := 0) R
+  		WHERE 1=1
+  		) 
+  		list
+  		WHERE rnum > (#{pageNum}-1)*#{amount}  AND rnum <= #{pageNum}*#{amount} 
+	]]>
+</select>
+
+<select id="getBuddyList" resultType="com.binfree.web.buddy.domain.BuddyVO">
+	<![CDATA[select * from buddy where id > 0]]>
+</select>
+
+<insert id="buddyInsert">
+	<!-- value의 #{BuddyVO 변수와 같이 선언 해주어야함} -->
+	INSERT INTO BUDDY(NAME, PHONE, ZIPCODE, LOC, INPUTLOC, SERVLOC, PASSDATE, PIC)
+	VALUES(#{name}, #{phone}, #{zipCode}, #{loc}, #{inputLoc} ,#{servLoc} , NOW(), #{pic});
+</insert>
+
+<!-- 오류 유발할 코드 테스트 중 -->
+
+<insert id="buddyInsertSelectKey">
+	<selectKey keyProperty="id" order="BEFORE" resultType="long">
+		SELECT MAX(id)+1 FROM BUDDY
+	</selectKey>
+	INSERT INTO BUDDY(ID, NAME, PHONE, ZIPCODE, LOC, INPUTLOC, SERVLOC, PASSDATE, PIC)
+	VALUES(#{id}, #{name}, #{phone}, #{zipCode}, #{loc}, #{inputLoc} ,#{servLoc} , NOW(), #{pic});
+</insert>
+
+
+<select id="buddyRead" resultType="com.binfree.web.buddy.domain.BuddyVO">
+	SELECT * FROM BUDDY WHERE ID = #{id}
+</select>
+
+<delete id="buddyDelete">
+	DELETE FROM BUDDY WHERE ID = #{id}	
+</delete>
+
+<update id="buddyUpdate">
+	UPDATE BUDDY
+	SET NAME = #{name},
+	PHONE = #{phone},
+	ZIPCODE = #{zipCode},
+	LOC = #{loc},
+	INPUTLOC = #{inputLoc},
+	SERVLOC = #{servLoc},
+	PIC = #{pic}
+	WHERE ID = #{id}
+</update>
+
+</mapper>

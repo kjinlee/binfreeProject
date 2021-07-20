@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+ 
+<mapper namespace="com.binfree.web.goods.mapper.CommentMapper">
+ 
+    <select id="commentCount" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM comment
+    </select>
+    
+    <select id="commentList" parameterType="hashmap" resultType="com.binfree.web.goods.domain.CommentVO">
+        SELECT
+            *
+        FROM comment where BNO = #{bno} order by cno desc LIMIT #{startNum}
+    </select>
+    
+    <insert id="commentInsert" parameterType="com.binfree.web.goods.domain.CommentVO">
+        INSERT INTO
+        comment (CNO, BNO, CONTENT, WRITER, REG_DATE, email)
+        VALUES(#{cno},#{bno},#{content},#{writer},now(), #{email}) 
+    </insert>
+    
+    <update id="commentUpdate" parameterType="com.binfree.web.goods.domain.CommentVO">
+        UPDATE comment
+            SET
+            CONTENT = #{content}
+        WHERE CNO = #{cno}
+    </update>
+    
+    <delete id="commentDelete" parameterType="int">
+        DELETE FROM comment WHERE CNO = #{cno}
+    </delete>
+    
+    
+</mapper>

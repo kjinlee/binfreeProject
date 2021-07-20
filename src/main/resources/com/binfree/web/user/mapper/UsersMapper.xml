@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.binfree.web.user.mapper.UsersMapper">
+
+	<insert id="userJoin">
+		insert into users values(#{id}, #{email}, #{password}, #{name}, #{phone},
+		#{zipCode}, #{loc}, #{inputLoc}, #{subName}, #{subPhone}, #{subItem},
+		#{subStart}, #{subEnd}, #{myBuddy}, #{checkbox}, #{enabled}, #{auth}
+		);
+	</insert>
+
+
+	<insert id="userJoinKakao">
+		insert into users values(#{id}, #{email}, #{password}, #{name}, #{phone},
+		#{zipCode}, #{loc}, #{inputLoc}, #{subName}, #{subPhone}, #{subItem},
+		#{subStart}, #{subEnd}, #{myBuddy}, #{checkbox}, 1, "ROLE_KAKAO" );
+	</insert>
+
+	<select id="getKakaoUserInfo"
+		resultType="com.binfree.web.user.security.CustomUserDetails">
+      <![CDATA[
+         SELECT * FROM users
+         WHERE email = #{email}      
+      ]]>
+	</select>
+
+
+
+	<select id="emailCheck" parameterType="String"
+		resultType="Integer">
+		SELECT count(*)
+		FROM users
+		WHERE email = #{email}
+	</select>
+
+	<select id="userCount" resultType="int">
+	         <![CDATA[
+		SELECT COUNT(*) FROM users WHERE ID > 0
+		    ]]>
+	</select>
+
+	<resultMap type="com.binfree.web.user.domain.UsersVO"
+		id="usersMap">
+		<id property="id" column="id" />
+		<result property="id" column="id" />
+		<result property="email" column="email" />
+		<result property="password" column="password" />
+		<result property="name" column="name" />
+		<result property="phone" column="phone" />
+		<result property="zipCode" column="zipCode" />
+		<result property="loc" column="loc" />
+		<result property="subName" column="subName" />
+		<result property="subPhone" column="subPhone" />
+		<result property="subItem" column="subItem" />
+		<result property="subStart" column="subStart" />
+		<result property="subEnd" column="subEnd" />
+		<result property="myBuddy" column="myBuddy" />
+		<result property="checkbox" column="checkbox" />
+	</resultMap>
+
+	<select id="read" resultMap="usersMap">
+         <![CDATA[
+         SELECT id, 
+         email , 
+         password , 
+         name, phone, 
+         zipCode, loc, 
+         inputLoc, 
+         subName,
+         subPhone, 
+         subItem, 
+         subStart, 
+		 subEnd,
+		 myBuddy,
+		 checkbox,
+		 enabled,auth
+         FROM bfree.users
+         WHERE email = #{email}
+         ]]>
+	</select>
+
+	<select id="getEmail" resultMap="usersMap">
+      <![CDATA[
+         SELECT email
+         FROM bfree.users
+         WHERE email = #{email} 
+      ]]>
+	</select>
+
+	<select id="getLoginUserInfo"
+		resultType="com.binfree.web.user.security.CustomUserDetails">
+      <![CDATA[
+         SELECT * FROM users
+         WHERE email = #{email}      
+      ]]>
+	</select>
+
+	<select id="getUserInfo"
+		parameterType="String"
+		resultType="com.binfree.web.user.domain.UsersVO">
+      <![CDATA[
+         SELECT * FROM users
+         WHERE email = #{email}      
+      ]]>
+	</select>
+
+	<select id="setModifyUserInfo"
+		parameterType="com.binfree.web.user.domain.UsersVO"
+		resultType="com.binfree.web.user.domain.UsersVO">
+      <![CDATA[
+         UPDATE users 
+         SET phone = #{phone} 
+         WHERE email = #{email}
+      ]]>
+	</select>
+
+	<select id="setModifyPwd" parameterType="String"
+		resultType="com.binfree.web.user.domain.UsersVO">
+      <![CDATA[
+         UPDATE users 
+         SET password = #{password} 
+         WHERE email = #{email}
+      ]]>
+	</select>
+
+	<select id="setModifySubInfo"
+		parameterType="com.binfree.web.user.domain.UsersVO"
+		resultType="com.binfree.web.user.domain.UsersVO">
+      <![CDATA[
+         UPDATE users 
+         SET subItem = #{subItem}, subName = #{subName}, subPhone = #{subPhone}, zipCode = #{zipCode}, loc = #{loc}, inputLoc = #{inputLoc}
+         WHERE email = #{email}
+      ]]>
+	</select>
+
+	<select id="setSubInfo"
+		parameterType="com.binfree.web.user.domain.UsersVO"
+		resultType="com.binfree.web.user.domain.UsersVO">
+      <![CDATA[
+         UPDATE users 
+         SET subItem = #{subItem}, subName = #{subName}, subPhone = #{subPhone}, zipCode = #{zipCode}, loc = #{loc}, inputLoc = #{inputLoc}, subStart = NOW(), 
+       	 subEnd = date_add(NOW(), interval #{subEnd} month)
+         WHERE email = #{email}
+      ]]>
+	</select>
+
+
+	<select id="setBuddy">
+		update users set myBuddy = #{myBuddy} where email = #{email}
+
+	</select>
+
+	<select id="byeUser" parameterType="String" resultType="String">
+      <![CDATA[
+         DELETE FROM users 
+         WHERE email = #{email}
+      ]]>
+	</select>
+
+	<select id="getUserEmailCnt" resultType="int">
+      <![CDATA[
+         SELECT count(*) FROM users
+         WHERE email = #{email}      
+      ]]>
+	</select>
+
+	<select id="getUserNameCnt" resultType="int">
+      <![CDATA[
+         SELECT count(*) FROM users
+         WHERE name = #{name}      
+      ]]>
+	</select>
+
+
+</mapper>

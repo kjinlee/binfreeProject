@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.binfree.web.buddy.mapper.BuddyMapper">
+
+	<select id="getTotalCount" resultType="int">
+		SELECT COUNT(*) FROM buddy
+		WHERE ID > 0
+	</select>
+
+	<select id="getBuddyListWithPaging"
+		resultType="com.binfree.web.buddy.domain.BuddyVO">
+	<![CDATA[
+		SELECT * FROM(
+  		SELECT @rownum:=@rownum+1  rnum, A.* 
+  		FROM buddy A, (SELECT @ROWNUM := 0) R
+  		WHERE 1=1
+  		) 
+  		list
+  		WHERE rnum > (#{pageNum}-1)*#{amount}  AND rnum <= #{pageNum}*#{amount} 
+	]]>
+	</select>
+
+
+	<select id="getTotalCountForHome" resultType="int">
+		SELECT COUNT(*)
+		FROM buddy WHERE ID > 0
+	</select>
+
+	<select id="getBuddyList"
+		resultType="com.binfree.web.buddy.domain.BuddyVO">
+	<![CDATA[select * from buddy where id > 0]]>
+	</select>
+
+	<insert id="buddyInsert">
+		<!-- value의 #{buddyVO 변수와 같이 선언 해주어야함} -->
+		INSERT INTO buddy(NAME, PHONE, ZIPCODE, LOC, INPUTLOC, SERVLOC,
+		PASSDATE, PIC)
+		VALUES(#{name}, #{phone}, #{zipCode}, #{loc},
+		#{inputLoc} ,#{servLoc} , NOW(),
+		#{pic});
+	</insert>
+
+	<!-- 오류 유발할 코드 테스트 중 -->
+
+	<insert id="buddyInsertSelectKey">
+		<selectKey keyProperty="id" order="BEFORE" resultType="long">
+			SELECT MAX(id)+1 FROM buddy
+		</selectKey>
+		INSERT INTO buddy(ID, NAME, PHONE, ZIPCODE, LOC, INPUTLOC, SERVLOC,
+		PASSDATE, PIC)
+		VALUES(#{id}, #{name}, #{phone}, #{zipCode}, #{loc},
+		#{inputLoc} ,#{servLoc} ,
+		NOW(), #{pic});
+	</insert>
+
+
+	<select id="buddyRead"
+		resultType="com.binfree.web.buddy.domain.BuddyVO">
+		SELECT * FROM buddy WHERE ID = #{id}
+	</select>
+
+	<delete id="buddyDelete">
+		DELETE FROM buddy WHERE ID = #{id}
+	</delete>
+
+	<update id="buddyUpdate">
+		UPDATE buddy
+		SET NAME = #{name},
+		PHONE = #{phone},
+		ZIPCODE = #{zipCode},
+		LOC = #{loc},
+		INPUTLOC = #{inputLoc},
+		SERVLOC =
+		#{servLoc},
+		PIC = #{pic}
+		WHERE ID = #{id}
+	</update>
+
+	<select id="getBuddyLoc"
+		resultType="com.binfree.web.buddy.domain.BuddyVO">
+		select * from buddy where zipCode like
+		concat('%',#{zipCode},'%')
+
+	</select>
+
+	<select id="getBfamilyListTotal" resultType="java.lang.Integer">
+      <![CDATA[
+         SELECT COUNT(*) FROM users WHERE 1=1]]>
+		<choose>
+			<when test="type == 'N'.toString()">
+				AND subName like concat('%',#{keyword},'%')
+			</when>
+			<when test="type == 'P'.toString()">
+				AND subPhone like concat('%',#{keyword},'%')
+			</when>
+			<when test="type == 'L'.toString()">
+				AND loc like concat('%',#{keyword},'%')
+			</when>
+			<when test="type == 'I'.toString()">
+				AND inputLoc like concat('%',#{keyword},'%')
+			</when>
+			<when test="type == 'ALL'.toString()">
+				AND subName like concat('%',#{keyword},'%')
+				OR subPhone like concat('%',#{keyword},'%')
+				OR loc like concat('%',#{keyword},'%')
+				OR inputLoc like concat('%',#{keyword},'%')
+			</when>
+		</choose>
+         <![CDATA[
+            AND myBuddy = #{id}
+         ]]>
+
+	</select>
+
+	<select id="getBfamilyListWithPaging"
+		resultType="com.binfree.web.user.domain.UsersVO">
+      <![CDATA[
+         SELECT * FROM(
+           SELECT @rownum:=@rownum+1  rnum, A.* 
+           FROM users A, (SELECT @ROWNUM := 0) R
+           WHERE 1=1 ]]>
+		<choose>
+			<when test="type == 'N'.toString()">
+				AND subName like concat('%',#{keyword},'%')
+			</when>
+			<when test="type == 'P'.toString()">
+				AND subPhone like concat('%',#{keyword},'%')
+			</when>
+			<when test="type == 'L'.toString()">
+				AND loc like concat('%',#{keyword},'%')
+			</when>
+			<when test="type == 'I'.toString()">
+				AND inputLoc like concat('%',#{keyword},'%')
+			</when>
+			<when test="type == 'ALL'.toString()">
+				AND subName like concat('%',#{keyword},'%')
+				OR subPhone like concat('%',#{keyword},'%')
+				OR loc like concat('%',#{keyword},'%')
+				OR inputLoc like concat('%',#{keyword},'%')
+			</when>
+		</choose>
+        <![CDATA[
+           AND myBuddy = #{id}          
+           ORDER BY id DESC)list
+           WHERE rnum > (#{pageNum}-1)*#{amount}  AND rnum <= #{pageNum}*#{amount}           
+        ]]>
+	</select>
+
+
+</mapper>

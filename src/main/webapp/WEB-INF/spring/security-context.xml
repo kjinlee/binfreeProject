@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security 
+						http://www.springframework.org/schema/security/spring-security.xsd
+						http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd">
+		
+	<bean id="customAccessDenied" class="com.binfree.web.user.security.CustomAccessDeniedHandler"></bean>
+	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+	<bean id="customUserDetailsService" class="com.binfree.web.user.security.CustomUserDetailsService"></bean>
+	<bean id="usersServiceImpl" class="com.binfree.web.user.service.UsersServiceImpl"></bean>
+	<bean id="userAuthProviderKakao" class="com.binfree.web.user.security.CustomAuthenticationProviderKakao"></bean>
+	<bean id="userAuthProvider" class="com.binfree.web.user.security.CustomAuthenticationProvider"></bean>
+	
+
+	<security:http auto-config="true">
+	
+		<security:intercept-url pattern="/**" access="permitAll" />
+		<security:intercept-url pattern="/user/**" access="hasRole('ROLE_MEMBER', 'ROLE_ADMIN','ROLE_KAKAO')"/>
+		<security:intercept-url pattern="/admin/buddy/*" access="hasRole('ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/admin/bfamily/*" access="hasRole('ROLE_ADMIN')"/>
+		<security:intercept-url pattern="/admin/form/*" access="hasRole('ROLE_ADMIN')"/>
+		
+		<!-- <security:access-denied-handler error-page="/accessError" />  -->
+		<security:access-denied-handler ref="customAccessDenied"/>
+			
+		<!-- <security:form-login />  -->
+		<security:form-login 
+			username-parameter="email" 
+			password-parameter="password" 
+			login-processing-url="/login"
+			login-page="/user/loginpage"
+			default-target-url="/"
+ 			/>
+		
+		<security:logout 
+			logout-url="/logout" 
+			logout-success-url="/"
+			invalidate-session="true"
+			delete-cookies="_kdtd"
+						
+			
+			/>	
+			
+		<!-- <security:session-management invalid-session-url="/login"> 
+		<security:concurrency-control max-sessions="1" error-if-maximum-exceeded="false"/>
+		</security:session-management> -->
+		
+			
+	</security:http>
+	
+	
+	<security:authentication-manager alias="authenticationManager">
+		<security:authentication-provider ref="userAuthProviderKakao"/>
+		<security:authentication-provider user-service-ref="customUserDetailsService">
+		<security:password-encoder ref="bcryptPasswordEncoder"/>
+		</security:authentication-provider>
+	</security:authentication-manager>
+</beans>

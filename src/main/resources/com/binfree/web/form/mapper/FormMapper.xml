@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.binfree.web.form.mapper.FormMapper">
+	
+	<sql id="criteria">
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item="type" collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'I'.toString()">
+							id LIKE CONCAT('%',#{keyword},'%')
+						</when>
+						<when test="type == 'N'.toString()">
+							name LIKE CONCAT('%',#{keyword},'%')
+						</when>
+						<when test="type == 'L'.toString()">
+							servLoc LIKE CONCAT('%',#{keyword},'%')
+						</when>
+					</choose>
+				</trim>
+			</foreach>
+		</trim>
+	</sql>
+	
+	<select id="getTotalCount" resultType="int">
+		SELECT COUNT(*) FROM form 
+		WHERE 
+		<include refid="criteria"></include>
+		ID > 0
+	</select>
+
+	<select id="getFormListWithPaging"
+		resultType="com.binfree.web.form.domain.FormVO">
+	<![CDATA[
+		SELECT * FROM(
+  		SELECT @rownum:=@rownum+1 rnum, A.* 
+  		FROM form A, (SELECT @ROWNUM := 0) R
+  		WHERE 
+	]]>
+		<include refid="criteria"></include>
+	<![CDATA[
+		1=1) 
+  		list
+  		WHERE 
+		rnum > (#{pageNum}-1)*#{amount}  AND rnum <= #{pageNum}*#{amount} 
+	]]>
+	</select>
+
+	<select id="getFormList"
+		resultType="com.binfree.web.form.domain.FormVO">
+	<![CDATA[select * from form where id > 0]]>
+	</select>
+
+	<insert id="formInsert">
+		<!-- value의 #{formVO 변수와 같이 선언 해주어야함} -->
+		INSERT INTO form(NAME, PHONE, ZIPCODE, LOC, INPUTLOC, SERVLOC,
+		APPDATE, UPDATEDATE, PIC)
+		VALUES(#{name}, #{phone}, #{zipCode}, #{loc}, #{inputLoc} ,#{servLoc} , NOW(), NOW(),
+		#{pic});
+	</insert>
+
+	<!-- 오류 유발할 코드 테스트 중 -->
+
+	<insert id="formInsertSelectKey">
+		<selectKey keyProperty="id" order="BEFORE" resultType="long">
+			SELECT MAX(id)+1 FROM form
+		</selectKey>
+		INSERT INTO form(ID, NAME, PHONE, ZIPCODE, LOC, INPUTLOC, SERVLOC,
+		APPDATE, UPDATEDATE, PIC)
+		VALUES(#{id}, #{name}, #{phone}, #{zipCode}, #{loc}, #{inputLoc} ,#{servLoc} ,
+		NOW(), NOW(), #{pic});
+	</insert>
+
+
+	<select id="formRead"
+		resultType="com.binfree.web.form.domain.FormVO">
+		SELECT * FROM form WHERE ID = #{id}
+	</select>
+
+	<delete id="formDelete">
+		DELETE FROM form WHERE ID = #{id}
+	</delete>
+
+	<update id="formUpdate">
+		UPDATE form
+		SET NAME = #{name},
+		PHONE = #{phone},
+		ZIPCODE = #{zipCode},
+		LOC = #{loc},
+		INPUTLOC = #{inputLoc},
+		SERVLOC = #{servLoc},
+		UPDATEDATE = NOW(),
+		PIC = #{pic}
+		WHERE ID = #{id}
+	</update>
+
+</mapper>
+

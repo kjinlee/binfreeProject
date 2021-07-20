@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.binfree.web.user.mapper.UsersMapper">
+	<select id="getLoginUserInfo" parameterType="com.binfree.web.user.domain.UsersVO" resultType="com.binfree.web.user.domain.UsersVO">
+		<![CDATA[
+			SELECT id, email, password, name, phone, zipCode, loc, inputLoc, date_format(subStart, '%Y-%m-%d') as subStart, date_format(subEnd, '%Y-%m-%d') as subEnd
+			FROM USERS
+			WHERE email = #{email} and password = #{password}		
+		]]>
+	</select>
+	
+	<select id="getModifyUserInfo" parameterType="com.binfree.web.user.domain.UsersVO" resultType="com.binfree.web.user.domain.UsersVO">
+		<![CDATA[
+			SELECT email, password, name, phone
+			FROM USERS
+			WHERE email = #{email}
+		]]>
+	</select>
+	
+	<select id="setModifyUserInfo" parameterType="com.binfree.web.user.domain.UsersVO" resultType="com.binfree.web.user.domain.UsersVO">
+		<![CDATA[
+			UPDATE USERS 
+			SET password = #{password}, phone = #{phone}
+			WHERE email = #{email}
+		]]>
+	</select>
+	
+	<select id="getModifySubInfo" parameterType="com.binfree.web.user.domain.UsersVO" resultType="com.binfree.web.user.domain.UsersVO">
+		<![CDATA[
+			SELECT name, phone, zipCode, loc, inputLoc
+			FROM USERS
+			WHERE email = #{email}
+		]]>
+	</select>
+	
+	<select id="setModifySubInfo" parameterType="com.binfree.web.user.domain.UsersVO" resultType="com.binfree.web.user.domain.UsersVO">
+		<![CDATA[
+			UPDATE USERS 
+			SET name = #{name}, phone = #{phone}, subStart = #{subStart}, subEnd = #{subEnd}, zipCode = #{zipCode}, loc = #{loc}, inputLoc = #{inputLoc}
+			WHERE email = #{email}
+		]]>
+	</select>
+	
+
+</mapper>

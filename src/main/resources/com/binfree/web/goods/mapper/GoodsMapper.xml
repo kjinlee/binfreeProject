@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.binfree.web.goods.mapper.GoodsMapper">
+
+	<select id="getList"
+		resultType="com.binfree.web.goods.domain.GoodsVO">
+	<![CDATA[
+		select * from (
+                select id, goodsName,option1,option2,option3, contents, pic ,subName
+                from goods order by id desc) as T1 
+       			limit #{skip},#{amount}
+	]]>
+	</select>
+	
+	<select id="getGoodsTotal" resultType="int">
+		select count(*) from goods
+	</select>
+	
+
+	<select id="get"
+		resultType="com.binfree.web.goods.domain.GoodsVO">
+		SELECT * FROM goods WHERE id = #{id}
+	</select>
+
+	<insert id="goodsInsert">
+		insert into goods(goodsName, option1, option2,option3,
+		contents, pic, subName)
+		values (#{goodsName}, #{option1}, #{option2}, #{option3},
+		 #{contents}, #{pic}, #{subName})
+	</insert>
+
+	<delete id="goodsDelete">
+		delete from goods where id = #{id}
+	</delete>
+
+	<update id="goodsUpdate">
+		update goods
+		set goodsName=#{goodsName},option1=#{option1},option2=#{option2},option3=#{option3}
+		,contents=#{contents}, pic=#{pic}, subName=#{subName}
+		where id = #{id}
+	</update>
+	
+	<update id="deleteFile">
+		UPDATE goods set pic = null where id = #{id}
+	</update>
+	
+</mapper>

@@ -1,0 +1,7 @@
+INDEX VERSION 1.4+/Users/an-yohan/Desktop/BinFreeProject/.metadata/.plugins/org.eclipse.wst.jsdt.core/indexes
+2769335132.index
+3213802583.index
+1295407276.index
+197130540.index
+3516646417.index
+667226893.index

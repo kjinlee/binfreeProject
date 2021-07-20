@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.binfree.web.review.mapper.ReviewMapper">
+
+	<select id="getListWithPaging"
+		resultType="com.binfree.web.review.domain.ReviewVO">
+	<![CDATA[
+		select * from (
+                select id, email, userName, star, subItem, contents, creDate, updateDate  
+                from review order by id desc) as T1 
+       			limit #{skip},#{amount}
+	]]>
+	</select>
+	
+	<select id="getTotal" resultType="int">
+		select count(*) from review 
+	</select>
+	
+	<select id="getStarTotal" resultType="int">
+		select sum(star) from review
+	</select>
+	
+	<select id="getStarNum" resultType="int">
+		select count(if(star=#{star}, star, null))from review
+	</select>
+
+	<select id="get"
+		resultType="com.binfree.web.review.domain.ReviewVO">
+		SELECT * FROM review WHERE id = #{id}
+	</select>
+
+	<insert id="reviewInsert">
+		insert into review(email, userName, star, subItem,
+		contents, creDate,updateDate)
+		values (#{email}, #{userName}, #{star},
+		#{subItem}, #{contents}, NOW(), NOW())
+	</insert>
+
+	<delete id="reviewDelete">
+		delete from review where id = #{id}
+	</delete>
+
+	<update id="reviewUpdate">
+		update review
+		set contents=#{contents}, star=#{star},
+		updateDate=NOW()
+		where id = #{id}
+	</update>
+
+
+</mapper>
