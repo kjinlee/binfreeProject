@@ -38,11 +38,8 @@ public interface UsersService {
 
 	public int userCount();
 
-	// 이메일발송
-	public void sendEmail(UsersVO vo, String pw, String div);
-
 	// 비밀번호찾기
-	public void findPw(String name, String email);
+	public String findPw(String name, String email);
 
 	public int getUserEmailCnt(String email);
 

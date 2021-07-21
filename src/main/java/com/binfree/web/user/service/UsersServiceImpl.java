@@ -26,10 +26,10 @@ public class UsersServiceImpl implements UsersService {
 
 	@Autowired
 	private UsersMapper usersMapper;
-	
+
 	@Autowired
 	JavaMailSenderImpl mailSender;
-	
+
 	@Override
 	public void userJoin(UsersVO user) throws Exception {
 		usersMapper.userJoin(user);
@@ -107,59 +107,17 @@ public class UsersServiceImpl implements UsersService {
 	}
 
 	@Override
-	public void sendEmail(UsersVO vo, String pw, String div) {
-		
-		String from = "rudwls1378@gmail.com";
-		
-		String to = vo.getEmail();
-		
-		String subject = "";
-		String content = "";
+	public String findPw(String name, String email) {
+		int emailCnt = usersMapper.getUserEmailCnt(email);
+		int nameCnt = usersMapper.getUserNameCnt(name);
 
-		if (div.equals("findpw")) {
-			subject = "BFree 임시 비밀번호 입니다.";
-			content += "<div align='center' style='border:1px solid black; font-family:verdana'>";
-			content += "<h3 style='color: blue;'>";
-			content += vo.getName() + "님의 임시 비밀번호 입니다. <br/>비밀번호를 변경하여 사용하세요.</h3>";
-			content += "<p>임시 비밀번호 : ";
-			content += pw + "</p><br/>";
-			content += "<a href='http://52.14.170.10:8080/user/loginpage'>로그인하러 가기</a><br/></div>";
+		if (emailCnt == 0) {
+			return "emailNull";
+		} else if (nameCnt == 0) {
+			return "nameNull";
 		}
 
-		try {
-			
-			MimeMessage mail = mailSender.createMimeMessage();
-			MimeMessageHelper mailHelper = new MimeMessageHelper(mail, "UTF-8");
-			
-			mailHelper.setFrom(from);
-			mailHelper.setTo(to);
-			mailHelper.setSubject(subject);
-			mailHelper.setText(content);
-			
-			mailSender.send(mail);
-			
-		} catch (Exception e) {
-			log.info("메일 발송 실패: " + e);
-		}	
-		
-
-	}
-
-	@Override
-	public void findPw(String name, String email) {
-		UsersVO user = usersMapper.getUserInfo(email);
-
-		String pw = "";
-		for (int i = 0; i < 12; i++) {
-			pw += (char) ((Math.random() * 26) + 97);
-
-		}
-
-		String password = pwencoder.encode(pw);
-		user.setPassword(password);
-		
-		usersMapper.setModifyPwd(user);
-		sendEmail(user, pw, "findpw");
+		return "success";
 
 	}
 

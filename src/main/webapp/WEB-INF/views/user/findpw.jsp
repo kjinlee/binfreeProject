@@ -13,7 +13,10 @@ String msg = (String) request.getParameter("msg");
 <link rel="stylesheet"
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <script src="http://code.jquery.com/jquery-latest.js"></script>
-<script>
+<script src="http://localhost:82/socket.io/socket.io.js"></script>
+
+</script>
+ <script>
 	$(function() {
 		$("#findBtn").click(function() {
 			var name = $("#name").val();
@@ -23,7 +26,7 @@ String msg = (String) request.getParameter("msg");
 
 			$.ajax({
 				url : "${pageContext.request.contextPath }/user/findpw",
-				type : "POST",
+				type : "post",
 				beforeSend : function(xhr) {
 					/*데이터를 전송하기 전에 헤더에 csrf값을 설정한다*/
 					xhr.setRequestHeader(header, token);
@@ -45,7 +48,7 @@ String msg = (String) request.getParameter("msg");
 			})
 		});
 	})
-</script>
+</script> 
 <style type="text/css">
 .mybtn {
 	width: 150px;
@@ -140,6 +143,6 @@ String msg = (String) request.getParameter("msg");
 			  }
 			});
 			
-		</script>
+		</script> 
 </body>
 </html>
