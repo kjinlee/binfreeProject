@@ -1,10 +1,13 @@
 package com.binfree.web.user.controller;
 
+import java.io.IOException;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import com.binfree.web.buddy.service.BuddyService;
+import com.binfree.web.main.controller.URLConn;
 import com.binfree.web.user.domain.KakaoProfile;
 import com.binfree.web.user.domain.OAuthToken;
 import com.binfree.web.user.domain.UsersVO;
@@ -57,10 +61,9 @@ public class UsersController {
 
 	@Autowired
 	private BuddyService buddyService;
-	
+
 	@Autowired
 	private AuthenticationManager authenticationManager;
-	
 
 	@GetMapping("/loginpage")
 	public String loginInput(String success, String error, String logout, Model model) {
@@ -106,7 +109,7 @@ public class UsersController {
 			usersService.userJoin(user);
 
 			logger.info("join service 성공");
-			
+
 			model.addAttribute("msg", "회원가입이 완료되었습니다! 로그인 해주시기 바랍니다");
 			return "user/login_page";
 		} else {
@@ -226,7 +229,6 @@ public class UsersController {
 
 		CustomUserDetails originUser = usersService.getKakaoUserInfo(kakaoUser.getEmail());
 
-
 		if (originUser == null) {
 			System.out.println("기존 회원입니다.");
 			usersService.userJoinKakao(kakaoUser);
@@ -239,7 +241,6 @@ public class UsersController {
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		return "redirect:/";
-
 
 	}
 
@@ -327,28 +328,58 @@ public class UsersController {
 		SecurityContextHolder.clearContext();
 	}
 
-	@RequestMapping(value = "/findpw", method = RequestMethod.GET)
-	public void findPwGET() throws Exception {
+	@RequestMapping(value = "/start", method = RequestMethod.POST, consumes = "application/json")
+	@ResponseBody
+	public String startApp(@RequestBody String body) {
+		System.out.println(body);
+		log.info(body);
 
+		return "/";
+	}
+
+	@RequestMapping(value = "/findpw", method = RequestMethod.GET)
+	public String findpwGet() {
+		
+		return "/user/findpw";
 	}
 
 	@RequestMapping(value = "/findpw", method = RequestMethod.POST)
 	@ResponseBody
-	public String findPwPOST(String name, String email) {
-		int emailCnt = usersService.getUserEmailCnt(email);
-		int nameCnt = usersService.getUserNameCnt(name);
+	public String findpwPost(Locale locale, String name, String email) {
+		UsersVO user = usersService.getUserInfo(email);
+		String result = usersService.findPw(name, email);
+		
+		try {
+			
+			if(result.equals("success")) {
+				String pw = "";
+				for (int i = 0; i < 12; i++) {
+					pw += (char) ((Math.random() * 26) + 97);
 
-		if (emailCnt == 0) {
-			return "emailNull";
+				}
 
-		} else if (nameCnt == 0) {
-			return "nameNull";
+				String password = pwencoder.encode(pw);
+				user.setPassword(password);
 
-		} else {
-			usersService.findPw(name, email);
+				usersService.setModifyPwd(user);
+				JSONObject info = new JSONObject();
+				info.put("password", pw);
+				info.put("name", name);
+				info.put("email", email);
 
-			return "success";
+				URLConn conn = new URLConn("http://127.0.0.1", 1516);
+				conn.urlPost(info);
+			} else if(result.equals("emailNull")){
+				return "emailNull";
+			} else if(result.equals("nameNull")) {
+				return "nameNull";
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-	}
 
+		return "success";
+
+	}
+	
 }
