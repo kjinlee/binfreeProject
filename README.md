@@ -6,6 +6,7 @@
 개발 : Eclipse EE, MySQL<br/>
 사용 언어 : JAVA(JDK1.8), MySQL, HTML5, CSS3, JavaScript, JSP&Servlet<br/>
 사용 기술 : MyBATIS, MVC 모델2, jQuery, Ajax, OpenAPI(다음, 카카오, 결제), Java Mail, Spring Security<br/>
+이메일 서버 : Node.js 서버 연동 / nodemailer 모듈 사용<br/>
 화면 구성 : Balsamiq mockup<br/>
 
 # 프로젝트 상세 내용
